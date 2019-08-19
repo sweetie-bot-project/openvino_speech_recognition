@@ -125,7 +125,7 @@ def prepare_inference_engine():
 	model_xml = FLAGS.m
 	model_bin = os.path.splitext(model_xml)[0] + ".bin"
 
-	net = IENetwork.from_ir(model=model_xml, weights=model_bin)
+	net = IENetwork(model=model_xml, weights=model_bin)
 
 	input_blob = next(iter(net.inputs))# grap inputs shape and dimensions 
 	output_blob = next(iter(net.outputs)) # grab output shape and dimension
@@ -166,7 +166,7 @@ def main(_):
 		for i in FLAGS.i:
 
 			sess = tf.InteractiveSession()
-
+			print(i)
 			with open(i, 'rb') as wav_file: 
 				wav_data = wav_file.read()
 
@@ -176,9 +176,10 @@ def main(_):
 
 			post_processing(outputs[output_blob])
 
-			time.sleep(5)
+			time.sleep(1)
 
 			sess.close()
+		break
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
@@ -221,12 +222,13 @@ if __name__ == '__main__':
 	parser.add_argument(
 	  '-plugin_dirs',
 	   type=str,
-	   default = '/opt/intel/computer_vision_sdk/deployment_tools/inference_engine/lib/ubuntu_16.04/intel64',
+	   #default = '/opt/intel/computer_vision_sdk/deployment_tools/inference_engine/lib/ubuntu_16.04/intel64',
+	   default = '/opt/intel/openvino_2019.2.242/deployment_tools/inference_engine/lib/intel64',
 	   help ='Path to directory where plugin library files reside')
 	parser.add_argument(
 	  '-labels',
 	  type=str,
-	  default='/home/moniques-robot/Downloads/conv_labels.txt', 
+	  default='./conv_labels.txt', 
 	  help='What input audio file to use')
 	parser.add_argument(
 	  '-m',
